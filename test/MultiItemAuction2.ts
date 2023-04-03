@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("MultiItemAuction", function () {
-  let MultiItemAuction2, multiItemAuction2: {
+  let MultiItemAuction2, startingBids: any[], itemIds: any[], multiItemAuction2: {
     [x: string]: any; deployed: () => any; auctioneer: () => any; auctionEndTime: () => any;
   }, auctioneer: { address: any; }, bidder1: { address: any; }, bidder2: any, addrs;
 
@@ -10,8 +10,8 @@ describe("MultiItemAuction", function () {
     MultiItemAuction2 = await ethers.getContractFactory("MultiItemAuction2");
     [auctioneer, bidder1, bidder2, ...addrs] = await ethers.getSigners();
 
-    const itemIds = [1, 2, 3];
-    const startingBids = [100, 200, 300];
+    itemIds = [1, 2, 90];
+    startingBids = [100, 200, 4200];
     const biddingTime = 600; // 10 minutes
 
     multiItemAuction2 = await MultiItemAuction2.deploy(biddingTime, itemIds, startingBids);
@@ -26,9 +26,9 @@ describe("MultiItemAuction", function () {
     );
 
     for (let i = 0; i < 3; i++) {
-      const item = await multiItemAuction2.items(i + 1);
-      expect(item.itemId).to.equal(i + 1);
-      expect(item.startingBid).to.equal((i + 1) * 100);
+      const item = await multiItemAuction2.items(i);
+      expect(item.itemId).to.equal(itemIds[i]);
+      expect(item.startingBid).to.equal(startingBids[i]);
       expect(item.highestBid).to.equal(0);
       expect(item.highestBidder).to.equal(ethers.constants.AddressZero);
       expect(item.active).to.equal(true);

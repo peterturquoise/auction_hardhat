@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity <0.9.0;
 
 /// @title MultiItemAuction
 /// @author Peter Brooke
-/// @dev Multi-item aucton contract
-/// @dev    The auction system should allow users to place bids on items and automatically determine the highest bidder when the auction ends.
+/// @dev  The MultiItemAucton contract should allow users to place bids on items and automatically determine the highest bidder when the auction ends.
 ///    The smart contract should have the following functionality:
 ///    1. Initialise the auction with a list of items and their starting bids.
 ///    2. Allow users to place bids on items.
@@ -24,7 +23,6 @@ contract MultiItemAuction2 {
     uint public auctionEndTime;
     mapping(uint => Item) public items;
     mapping(uint => mapping(address => uint)) public pendingReturns;
-    uint[] public itemIds;
 
     event HighestBidIncreased(uint itemId, address bidder, uint amount);
     event AuctionEnded(uint itemId, address winner, uint amount);
@@ -43,14 +41,13 @@ contract MultiItemAuction2 {
         auctionEndTime = block.timestamp + _biddingTime;
 
         for (uint i = 0; i < _itemIds.length; i++) {
-            items[_itemIds[i]] = Item({
+            items[i] = Item({
                 itemId: _itemIds[i],
                 startingBid: _startingBids[i],
                 highestBid: 0,
                 highestBidder: address(0),
                 active: true
             });
-            itemIds.push(_itemIds[i]);
         }
     }
 
