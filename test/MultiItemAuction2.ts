@@ -11,7 +11,7 @@ describe("MultiItemAuction", function () {
     [auctioneer, bidder1, bidder2, ...addrs] = await ethers.getSigners();
 
     itemIds = [1, 2, 90];
-    startingBids = [100, 200, 4200];
+    startingBids = [ethers.utils.parseEther("100"), ethers.utils.parseEther("200"), ethers.utils.parseEther("4200")];
     const biddingTime = 600; // 10 minutes
 
     multiItemAuction2 = await MultiItemAuction2.deploy(biddingTime, itemIds, startingBids);
@@ -36,10 +36,10 @@ describe("MultiItemAuction", function () {
   });
 
   it("Should allow bidding on an item", async function () {
-    await multiItemAuction2.connect(bidder1).bid(1, { value: ethers.utils.parseEther("0.1") });
+    await multiItemAuction2.connect(bidder1).bid(1, { value: ethers.utils.parseEther("200") });
 
     const item = await multiItemAuction2.items(1);
-    expect(item.highestBid).to.equal(ethers.utils.parseEther("0.1"));
+    expect(item.highestBid).to.equal(ethers.utils.parseEther("200"));
     expect(item.highestBidder).to.equal(bidder1.address);
   });
 
